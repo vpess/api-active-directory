@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from pydantic.schema import Optional
+from typing import List
 
 
 class GetGroup(BaseModel):
@@ -15,13 +16,13 @@ class GetUser(BaseModel):
     distinguishedName: str
     whenCreated: str
     whenChanged: str
-    memberOf: list[GetGroup]
+    memberOf: List[GetGroup]
 
 
 class GetComputer(GetGroup):
     whenCreated: str
     whenChanged: str
-    memberOf: list[GetGroup]
+    memberOf: List[GetGroup]
 
 
 class AdObject(BaseModel):
@@ -30,10 +31,13 @@ class AdObject(BaseModel):
 
 
 class AddAction(BaseModel):
-    # action_log: str
-    message: str
-    details: str
+    action_log: str
+    # message: str
+    # details: str
 
 
 class DelAction(AddAction):
     pass
+
+class Message(BaseModel):
+    message: str
