@@ -41,6 +41,8 @@ class SearchAD:
             ad_type = self.get_type()
             if ad_type is None:
                 return '404'
+            elif ad_type != 'group':
+                return '400'
             else:
                 return {
                     "name": self.ad_object.name,
@@ -54,6 +56,8 @@ class SearchAD:
 
         if ad_type is None:
             return '404'
+        elif ad_type != 'user':
+            return '400'
         else:
             gp_list = self.ad_object.memberof
             return {
@@ -72,6 +76,8 @@ class SearchAD:
 
         if ad_type is None:
             return '404'
+        elif ad_type != 'computer':
+            return '400'
         else:
             gp_list = self.ad_object.memberof
             return {
