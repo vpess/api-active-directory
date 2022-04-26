@@ -8,27 +8,27 @@ ad_api = AdApi(LongArgs.tags_metadata())
 app = ad_api.app
 
 
-@app.get("/user/{ad_user}", tags=["Consultar"], response_model=GetUser)
+@app.get("/user/{ad_user}", tags=["Consultar"], response_model=GetUser, responses=LongArgs.json_responses())
 async def get_user(ad_user):
     """Retorna informações de um usuário do Active Directory."""
     user_data = SearchAD(ad_user).get_user()
-    ad_api.object_not_found_exception(user_data, ad_user)
+    ad_api.error_handling(user_data, ad_user)
     return user_data
 
 
-@app.get("/computer/{ad_computer}", tags=["Consultar"], response_model=GetComputer)
+@app.get("/computer/{ad_computer}", tags=["Consultar"], response_model=GetComputer, responses=LongArgs.json_responses())
 async def get_computer(ad_computer):
     """Retorna informações de um computador do Active Directory."""
     computer_data = SearchAD(ad_computer).get_computer()
-    ad_api.object_not_found_exception(computer_data, ad_computer)
+    ad_api.error_handling(computer_data, ad_computer)
     return computer_data
 
 
-@app.get("/group/{ad_group}", tags=["Consultar"], response_model=GetGroup)
+@app.get("/group/{ad_group}", tags=["Consultar"], response_model=GetGroup, responses=LongArgs.json_responses())
 async def get_group(ad_group):
     """Retorna informações de um grupo do Active Directory."""
     group_data = SearchAD(ad_group).get_group()
-    ad_api.object_not_found_exception(group_data, ad_group)
+    ad_api.error_handling(group_data, ad_group)
     return group_data
 
 
