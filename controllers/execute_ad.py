@@ -42,7 +42,7 @@ class ExecuteAd:
                 ActiveDirectory().set_default()
                 actions[action](self.group)
                 return {
-                    'action_log': f'{self.object_str} {success_msg[action]} {self.group_str}.'
+                    'message': f'{self.object_str} {success_msg[action]} {self.group_str}.'
                 }
             except Exception as err:
                 return {
