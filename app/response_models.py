@@ -31,13 +31,12 @@ class AdObject(BaseModel):
 
 
 class AddAction(BaseModel):
-    action_log: str
-    # message: str
-    # details: str
+    message: str
 
 
 class DelAction(AddAction):
     pass
 
-class Message(BaseModel):
-    message: str
+
+class Message(AddAction):
+    details: str
