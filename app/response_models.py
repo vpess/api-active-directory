@@ -30,13 +30,17 @@ class AdObject(BaseModel):
     grupo: str
 
 
-class AddAction(BaseModel):
+class Message(BaseModel):
     message: str
 
 
-class DelAction(AddAction):
+class AddAction(Message):
     pass
 
 
-class Message(AddAction):
-    details: str
+class DelAction(Message):
+    pass
+
+
+class DetailedMessage(Message):
+    deatils: str

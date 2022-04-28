@@ -1,4 +1,4 @@
-from app.response_models import Message
+from app.response_models import Message, DetailedMessage
 
 class LongArgs:
 
@@ -12,7 +12,7 @@ class LongArgs:
                                "do Active Directory. "
             },
             {
-                "name": "Executar (Em desenvolvimento)",
+                "name": "Executar",
                 "description": "Executa ações no Active Directory. **As ações não são realizadas em lote.**"
             }
         ]
@@ -26,7 +26,9 @@ class LongArgs:
             400: {
                 "model": Message
             },
-            422: {}
+            422: {
+                "model": DetailedMessage
+            }
         }
 
     @staticmethod
@@ -37,4 +39,11 @@ class LongArgs:
     @staticmethod
     def info_bad_request(object_str: str, object_type: str):
         return f"O objeto {object_str} foi encontrado no Active Directory, mas é do tipo {object_type.upper()}. " \
-               f"Utilize a chamada adequada."
+               f"Utilize a request de forma adequada."
+
+    @staticmethod
+    def info_unprocessable_entity(err: str):
+        return {
+            'message': 'Não foi possível executar a ação da request.',
+            'details': f'{err}'
+        }
