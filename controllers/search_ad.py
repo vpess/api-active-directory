@@ -1,5 +1,7 @@
 from pyad import pyad
 from models.active_directory import ActiveDirectory
+from app.ad_api import AdApi
+from app.long_args import LongArgs
 
 
 class SearchAD:
@@ -14,11 +16,6 @@ class SearchAD:
             return self.ad_object.type
         else:
             return None
-
-    # def __object_not_found(self):
-    #     return {
-    #         'error': f'{self.object_str} não foi encontrado no Active Directory.'
-    #     }
 
     def __get_group_list(self, gp_list: list):
         group_list = []
@@ -40,51 +37,69 @@ class SearchAD:
         else:
             ad_type = self.get_type()
             if ad_type is None:
-                return '404'
+                response = LongArgs.info_not_found(self.object_str)
+                AdApi.error_handling(404, response)
             elif ad_type != 'group':
-                return '400'
+                response = LongArgs.info_bad_request(self.object_str, ad_type)
+                AdApi.error_handling(400, response)
             else:
-                return {
-                    "name": self.ad_object.name,
-                    "distinguishedName": self.ad_object.distinguishedname,
-                    "description": self.ad_object.description
-                }
+                try:
+                    return {
+                        "name": self.ad_object.name,
+                        "distinguishedName": self.ad_object.distinguishedname,
+                        "description": self.ad_object.description
+                    }
+                except Exception as err:
+                    response = LongArgs.info_unprocessable_entity(f'{err}')
+                    AdApi.error_handling(422, response)
 
     def get_user(self):
         ActiveDirectory().set_default()
         ad_type = self.get_type()
 
         if ad_type is None:
-            return '404'
+            response = LongArgs.info_not_found(self.object_str)
+            AdApi.error_handling(404, response)
         elif ad_type != 'user':
-            return '400'
+            response = LongArgs.info_bad_request(self.object_str, ad_type)
+            AdApi.error_handling(400, response)
         else:
-            gp_list = self.ad_object.memberof
-            return {
-                "displayName": self.ad_object.displayname,
-                "mail": self.ad_object.mail,
-                "name": self.ad_object.name,
-                "distinguishedName": self.ad_object.distinguishedname,
-                "whenCreated": self.ad_object.whencreated.Format(),
-                "whenChanged": self.ad_object.whenchanged.Format(),
-                "memberOf": self.__get_group_list(gp_list)
-            }
+            try:
+                gp_list = self.ad_object.memberof
+                return {
+                    "displayName": self.ad_object.displayname,
+                    "mail": self.ad_object.mail,
+                    "name": self.ad_object.name,
+                    "distinguishedName": self.ad_object.distinguishedname,
+                    "whenCreated": self.ad_object.whencreated.Format(),
+                    "whenChanged": self.ad_object.whenchanged.Format(),
+                    "memberOf": self.__get_group_list(gp_list)
+                }
+            except Exception as err:
+                response = LongArgs.info_unprocessable_entity(f'{err}')
+                AdApi.error_handling(422, response)
 
     def get_computer(self):
         ActiveDirectory().set_default()
         ad_type = self.get_type()
 
         if ad_type is None:
-            return '404'
+            response = LongArgs.info_not_found(self.object_str)
+            AdApi.error_handling(404, response)
         elif ad_type != 'computer':
-            return '400'
+            response = LongArgs.info_bad_request(self.object_str, ad_type)
+            AdApi.error_handling(400, response)
         else:
-            gp_list = self.ad_object.memberof
-            return {
-                "name": self.ad_object.name,
-                "distinguishedName": self.ad_object.distinguishedname,
-                "description": self.ad_object.description,
-                "whenCreated": self.ad_object.whencreated.Format(),
-                "whenChanged": self.ad_object.whenchanged.Format(),
-                "memberOf": self.__get_group_list(gp_list)
-            }
+            try:
+                gp_list = self.ad_object.memberof
+                return {
+                    "name": self.ad_object.name,
+                    "distinguishedName": self.ad_object.distinguishedname,
+                    "description": self.ad_object.description,
+                    "whenCreated": self.ad_object.whencreated.Format(),
+                    "whenChanged": self.ad_object.whenchanged.Format(),
+                    "memberOf": self.__get_group_list(gp_list)
+                }
+            except Exception as err:
+                response = LongArgs.info_unprocessable_entity(f'{err}')
+                AdApi.error_handling(422, response)

@@ -1,4 +1,6 @@
 from pyad import pyad
+from app.ad_api import AdApi
+from app.long_args import LongArgs
 from controllers.search_ad import SearchAD
 from models.active_directory import ActiveDirectory
 
@@ -15,13 +17,21 @@ class ExecuteAd:
         ad_group_type = SearchAD(self.group_str).get_type()
 
         if ad_obj_type is None:
-            return {
-                'error': f'O objeto {self.object_str} não foi encontrado no Active Directory.'
-            }
+            response_detail = LongArgs.info_not_found(self.object_str)
+            AdApi.error_handling(404, response_detail)
+
+        elif ad_obj_type == 'group':
+            response_detail = LongArgs.info_bad_request(self.object_str, ad_obj_type)
+            AdApi.error_handling(400, response_detail)
+
         elif ad_group_type is None:
-            return {
-                'error': f'O grupo {self.group_str} não foi encontrado no Active Directory.'
-            }
+            response_detail = LongArgs.info_not_found(self.group_str)
+            AdApi.error_handling(404, response_detail)
+
+        elif ad_group_type != 'group':
+            response_detail = LongArgs.info_bad_request(self.group_str, ad_group_type)
+            AdApi.error_handling(400, response_detail)
+
         else:
             return True
 
@@ -31,23 +41,20 @@ class ExecuteAd:
             'del': 'removido do grupo'
         }
 
-        actions = {
-            'add': self.object.add_to_group,
-            'del': self.object.remove_from_group
-        }
-
         validation = self.validation()
         if validation:
+
+            actions = {
+                'add': self.object.add_to_group,
+                'del': self.object.remove_from_group
+            }
+
             try:
                 ActiveDirectory().set_default()
                 actions[action](self.group)
-                return {
-                    'message': f'{self.object_str} {success_msg[action]} {self.group_str}.'
-                }
+                return {'message': f'{self.object_str} {success_msg[action]} {self.group_str}.'}
             except Exception as err:
-                return {
-                    'message': f'Erro ao executar a ação "{action}".',
-                    'details': f'{err}'
-                }
+                response_detail = LongArgs.info_unprocessable_entity(f'{err}')
+                AdApi.error_handling(422, response_detail)
         else:
             return validation
