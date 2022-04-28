@@ -1,7 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from uvicorn import run
-from controllers.search_ad import SearchAD
-from app.long_args import LongArgs
 
 
 class AdApi:
@@ -20,13 +18,7 @@ class AdApi:
         run(self.app, host="127.0.0.1", port=8000)
 
     @staticmethod
-    def error_handling(obj: str, ad_obj: str):
-        if obj == '404':
-            raise HTTPException(status_code=404,
-                                detail=LongArgs.info_not_found(ad_obj))
-        elif obj == '400':
-            obj_type = SearchAD(ad_obj).get_type()
-            raise HTTPException(status_code=400,
-                                detail=LongArgs.info_bad_request(ad_obj, obj_type))
-        else:
-            pass
+    def error_handling(status: int, response_detail: str):
+
+        raise HTTPException(status_code=status,
+                            detail=response_detail)
