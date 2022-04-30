@@ -11,13 +11,13 @@ app = ad_api.app
 @app.get("/user/{ad_user}", tags=["Consultar"], response_model=GetUser, responses=LongArgs.json_responses())
 async def get_user(ad_user):
     """Retorna informações de um usuário do Active Directory."""
-    return SearchAD(ad_user).get_user()
+    return SearchAD(ad_user).get_object('user')
 
 
 @app.get("/computer/{ad_computer}", tags=["Consultar"], response_model=GetComputer, responses=LongArgs.json_responses())
 async def get_computer(ad_computer):
     """Retorna informações de um computador do Active Directory."""
-    return SearchAD(ad_computer).get_computer()
+    return SearchAD(ad_computer).get_object('computer')
 
 
 @app.get("/group/{ad_group}", tags=["Consultar"], response_model=GetGroup, responses=LongArgs.json_responses())
