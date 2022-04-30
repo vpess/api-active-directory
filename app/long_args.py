@@ -1,5 +1,6 @@
 from app.response_models import Message, DetailedMessage
 
+
 class LongArgs:
 
     @staticmethod
@@ -16,7 +17,7 @@ class LongArgs:
                 "description": "Executa ações no Active Directory. **As ações não são realizadas em lote.**"
             }
         ]
-        
+
     @staticmethod
     def json_responses():
         return {

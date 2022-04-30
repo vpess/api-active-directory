@@ -34,13 +34,13 @@ class Message(BaseModel):
     message: str
 
 
+class DetailedMessage(Message):
+    details: str
+
+
 class AddAction(Message):
     pass
 
 
 class DelAction(Message):
     pass
-
-
-class DetailedMessage(Message):
-    deatils: str
