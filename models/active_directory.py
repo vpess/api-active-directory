@@ -1,4 +1,5 @@
 from pyad import pyad
+from time import sleep
 
 
 class ActiveDirectory:
@@ -9,7 +10,11 @@ class ActiveDirectory:
         self.password = ''
 
     def set_default(self):
-        pyad.set_defaults(ldap_server=self.ldap_server,
-                          ldap_port=self.ldap_port,
-                          username=self.username,
-                          password=self.password)
+        try:
+            pyad.set_defaults(ldap_server=self.ldap_server,
+                              ldap_port=self.ldap_port,
+                              username=self.username,
+                              password=self.password)
+            sleep(1)
+        except Exception as err:
+            print(f"Erro ocorrido ao estabelecer conexão: {err}")
