@@ -12,6 +12,8 @@ class ExecuteAd:
         self.group = pyad.from_cn(group_str)
 
     def validation(self):
+        """Valida as informações do body da request. Se o objeto e o grupo existirem e forem do tipo equivalente,
+        retornará True. """
         ad_obj_type = SearchAD(self.object_str).get_type()
         ad_group_type = SearchAD(self.group_str).get_type()
 
@@ -27,6 +29,7 @@ class ExecuteAd:
             return True
 
     def run_action(self, action: str):
+        """Executa a ação de inclusão (add) ou exclusão (del) de um objeto em grupos do AD."""
         validation = self.validation()
         success_msg = {
             'add': 'adicionado ao grupo',
